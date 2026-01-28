@@ -1,7 +1,6 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Mic } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { alFatiha } from "@/data/alFatiha";
-import { Mic } from "lucide-react";
 
 const AlFatihaPage = () => {
   const navigate = useNavigate();
@@ -23,7 +22,7 @@ const AlFatihaPage = () => {
             {alFatiha.nameArabic}
           </h1>
           
-          <div className="w-9" /> {/* Spacer for centering */}
+          <div className="w-9" />
         </div>
         
         {/* Juz/Hizb and Page info */}
@@ -33,59 +32,96 @@ const AlFatihaPage = () => {
         </div>
       </header>
 
-      {/* Quran Content - Book style */}
-      <main className="flex-1 overflow-y-auto px-4 py-6 pb-32">
+      {/* Quran Page Content */}
+      <main className="flex-1 overflow-y-auto p-4 pb-36">
         <div className="max-w-lg mx-auto">
-          {/* Verses as continuous flowing text */}
-          <div 
-            className="font-arabic text-xl leading-[2.5] text-foreground text-right"
-            dir="rtl"
-            lang="ar"
-          >
-            {alFatiha.verses.map((verse, index) => (
-              <span key={verse.number}>
-                {verse.arabicText}
-                {" "}
-                <span className="inline-flex items-center justify-center w-6 h-6 text-xs rounded-full border border-muted-foreground/30 text-muted-foreground mx-1">
-                  {verse.number}
-                </span>
-                {" "}
-              </span>
-            ))}
+          {/* Quran Page - Book Style */}
+          <div className="relative bg-gradient-to-b from-[hsl(42,45%,93%)] to-[hsl(38,40%,88%)] rounded-lg shadow-lg overflow-hidden">
+            {/* Decorative border */}
+            <div className="absolute inset-2 border-2 border-gold/30 rounded pointer-events-none" />
+            <div className="absolute inset-3 border border-gold/20 rounded pointer-events-none" />
+            
+            {/* Corner ornaments */}
+            <div className="absolute top-4 left-4 w-6 h-6 border-l-2 border-t-2 border-gold/40 rounded-tl" />
+            <div className="absolute top-4 right-4 w-6 h-6 border-r-2 border-t-2 border-gold/40 rounded-tr" />
+            <div className="absolute bottom-4 left-4 w-6 h-6 border-l-2 border-b-2 border-gold/40 rounded-bl" />
+            <div className="absolute bottom-4 right-4 w-6 h-6 border-r-2 border-b-2 border-gold/40 rounded-br" />
+
+            {/* Surah Header Ornament */}
+            <div className="pt-8 pb-4 px-6">
+              <div className="relative bg-gradient-to-r from-gold/20 via-gold/30 to-gold/20 rounded-lg py-3 px-4">
+                <div className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-[1px] bg-gradient-to-r from-transparent to-gold/60" />
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-[1px] bg-gradient-to-l from-transparent to-gold/60" />
+                <p className="font-arabic text-lg text-center text-gold-dark font-semibold">
+                  سُورَةُ الفَاتِحَة
+                </p>
+              </div>
+            </div>
+
+            {/* Bismillah */}
+            <div className="text-center pb-4">
+              <p 
+                className="font-arabic text-xl text-[hsl(38,60%,30%)] font-semibold"
+                dir="rtl"
+              >
+                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+              </p>
+            </div>
+
+            {/* Verses */}
+            <div className="px-6 pb-8">
+              <div 
+                className="font-arabic text-[22px] leading-[2.8] text-[hsl(25,30%,20%)] text-justify"
+                dir="rtl"
+                lang="ar"
+                style={{ textAlignLast: 'center' }}
+              >
+                {alFatiha.verses.slice(1).map((verse) => (
+                  <span key={verse.number} className="inline">
+                    {verse.arabicText}
+                    {" "}
+                    <span className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-sans rounded-full bg-gold/20 text-gold-dark mx-0.5 align-middle">
+                      {verse.number}
+                    </span>
+                    {" "}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </main>
 
       {/* Tajweed Legend */}
-      <div className="fixed bottom-20 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border px-3 py-2">
-        <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[10px] text-muted-foreground">
+      <div className="fixed bottom-16 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border px-3 py-2">
+        <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-[9px] text-muted-foreground">
           <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-pink-500" />
-            مد ٦ حركات (لازم)
+            <span className="w-2 h-2 rounded-full bg-[hsl(330,70%,50%)]" />
+            مد لازم
           </span>
           <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-orange-500" />
-            مد ٢-٤-٦ حروف
+            <span className="w-2 h-2 rounded-full bg-[hsl(30,85%,55%)]" />
+            مد واجب
           </span>
           <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            إخفاء، ومواضع الغنة
+            <span className="w-2 h-2 rounded-full bg-[hsl(158,55%,40%)]" />
+            إخفاء
           </span>
           <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-blue-500" />
-            إدغام، وما لا يُلفظ
+            <span className="w-2 h-2 rounded-full bg-[hsl(210,70%,50%)]" />
+            إدغام
           </span>
         </div>
       </div>
 
       {/* Centered Record Button */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 pb-4">
+      <div className="fixed bottom-0 left-0 right-0 z-50 pb-3">
         <div className="flex justify-center">
           <button
-            className="w-14 h-14 rounded-full bg-record-idle hover:bg-record-active flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105"
+            className="w-12 h-12 rounded-full bg-record-idle hover:bg-record-active flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
             aria-label="Start recording"
           >
-            <Mic className="w-6 h-6 text-primary-foreground" />
+            <Mic className="w-5 h-5 text-primary-foreground" />
           </button>
         </div>
       </div>
