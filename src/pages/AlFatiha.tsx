@@ -1,9 +1,15 @@
-import { ArrowLeft, Mic } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { alFatiha } from "@/data/alFatiha";
+import { RecordButton } from "@/components/RecordButton";
 
 const AlFatihaPage = () => {
   const navigate = useNavigate();
+
+  const handleRecordingComplete = (audioBlob: Blob) => {
+    console.log("Recording complete:", audioBlob.size, "bytes");
+    // TODO: Send to Python backend for Tajweed analysis
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -115,14 +121,9 @@ const AlFatihaPage = () => {
       </div>
 
       {/* Centered Record Button */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 pb-3">
+      <div className="fixed bottom-0 left-0 right-0 z-50 pb-2">
         <div className="flex justify-center">
-          <button
-            className="w-12 h-12 rounded-full bg-record-idle hover:bg-record-active flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 active:scale-95"
-            aria-label="Start recording"
-          >
-            <Mic className="w-5 h-5 text-primary-foreground" />
-          </button>
+          <RecordButton onRecordingComplete={handleRecordingComplete} />
         </div>
       </div>
     </div>
