@@ -1,14 +1,27 @@
+import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { alFatiha } from "@/data/alFatiha";
 import { RecordButton } from "@/components/RecordButton";
+import { TajweedFeedback, TajweedResult } from "@/components/TajweedFeedback";
 
 const AlFatihaPage = () => {
   const navigate = useNavigate();
+  const [analysisResult, setAnalysisResult] = useState<TajweedResult | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const handleRecordingComplete = (audioBlob: Blob) => {
     console.log("Recording complete:", audioBlob.size, "bytes");
-    // TODO: Send to Python backend for Tajweed analysis
+  };
+
+  const handleAnalysisStart = () => {
+    setIsAnalyzing(true);
+    setAnalysisResult(null);
+  };
+
+  const handleAnalysisComplete = (result: TajweedResult) => {
+    setAnalysisResult(result);
+    setIsAnalyzing(false);
   };
 
   return (
@@ -39,7 +52,7 @@ const AlFatihaPage = () => {
       </header>
 
       {/* Quran Page Content */}
-      <main className="flex-1 overflow-y-auto p-4 pb-36">
+      <main className="flex-1 overflow-y-auto p-4 pb-56">
         <div className="max-w-lg mx-auto">
           {/* Quran Page - Book Style */}
           <div className="relative bg-gradient-to-b from-[hsl(42,45%,93%)] to-[hsl(38,40%,88%)] rounded-lg shadow-lg overflow-hidden">
@@ -120,10 +133,22 @@ const AlFatihaPage = () => {
         </div>
       </div>
 
-      {/* Centered Record Button */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 pb-2">
-        <div className="flex justify-center">
-          <RecordButton onRecordingComplete={handleRecordingComplete} />
+      {/* Feedback Panel + Record Button */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border">
+        {/* Tajweed Feedback */}
+        {(isAnalyzing || analysisResult) && (
+          <div className="px-4 pt-3 max-w-lg mx-auto">
+            <TajweedFeedback result={analysisResult} isLoading={isAnalyzing} />
+          </div>
+        )}
+        
+        {/* Record Button */}
+        <div className="flex justify-center py-2">
+          <RecordButton 
+            onRecordingComplete={handleRecordingComplete}
+            onAnalysisStart={handleAnalysisStart}
+            onAnalysisComplete={handleAnalysisComplete}
+          />
         </div>
       </div>
     </div>
