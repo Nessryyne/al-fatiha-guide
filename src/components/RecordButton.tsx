@@ -2,18 +2,63 @@ import { useState, useCallback, useRef } from "react";
 import { Mic, Square, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { TajweedResult } from "./TajweedFeedback";
 
 interface RecordButtonProps {
   onRecordingComplete?: (audioBlob: Blob) => void;
   onRecordingStart?: () => void;
   onRecordingStop?: () => void;
+  onAnalysisComplete?: (result: TajweedResult) => void;
+  onAnalysisStart?: () => void;
   className?: string;
 }
+
+// Mock analysis function - replace with real API call
+const mockAnalyzeTajweed = async (audioBlob: Blob): Promise<TajweedResult> => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  
+  // Randomly return either success or error for demo
+  const isCorrect = Math.random() > 0.5;
+  
+  if (isCorrect) {
+    return {
+      transcription: "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ",
+      phonemes: "b i s m i l l aː h i r r a ħ m aː n i r r a ħ iː m",
+      errors: [],
+      score: 100
+    };
+  } else {
+    return {
+      transcription: "بِسۡمِ ٱللَّهِ ٱلرَّهمَٰنِ ٱلرَّهيمِ",
+      phonemes: "b i s m i l l aː h i r r a h m aː n i r r a h iː m",
+      errors: [
+        {
+          position: 12,
+          expected_phoneme: "ħ",
+          got_phoneme: "h",
+          is_haa_error: true,
+          description: "Said ه (h) instead of ح (ħ) in الرَّحۡمَٰنِ"
+        },
+        {
+          position: 18,
+          expected_phoneme: "ħ",
+          got_phoneme: "h",
+          is_haa_error: true,
+          description: "Said ه (h) instead of ح (ħ) in الرَّحِيمِ"
+        }
+      ],
+      score: 65
+    };
+  }
+};
 
 export const RecordButton = ({
   onRecordingComplete,
   onRecordingStart,
   onRecordingStop,
+  onAnalysisComplete,
+  onAnalysisStart,
   className,
 }: RecordButtonProps) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -44,18 +89,30 @@ export const RecordButton = ({
         }
       };
 
-      mediaRecorder.onstop = () => {
+      mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(chunksRef.current, { type: mediaRecorder.mimeType });
         stream.getTracks().forEach(track => track.stop());
         
         setIsProcessing(true);
         onRecordingComplete?.(audioBlob);
+        onAnalysisStart?.();
         
-        // Simulate processing - replace with actual API call
-        setTimeout(() => {
+        try {
+          // Call analysis (mock for now, replace with real API)
+          const result = await mockAnalyzeTajweed(audioBlob);
+          onAnalysisComplete?.(result);
+          
+          if (result.errors.length === 0) {
+            toast.success("Perfect recitation! 🎉");
+          } else {
+            toast.error(`${result.errors.length} pronunciation issue(s) found`);
+          }
+        } catch (error) {
+          console.error("Analysis error:", error);
+          toast.error("Failed to analyze recording. Please try again.");
+        } finally {
           setIsProcessing(false);
-          toast.success("Recording saved! Backend integration needed for analysis.");
-        }, 1500);
+        }
       };
 
       mediaRecorder.start(100);
