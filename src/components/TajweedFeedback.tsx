@@ -7,6 +7,7 @@ export interface TajweedError {
   got_phoneme: string;
   is_haa_error: boolean;
   description: string;
+  error_word?: string;
 }
 
 export interface TajweedResult {
@@ -14,6 +15,7 @@ export interface TajweedResult {
   phonemes: string;
   errors: TajweedError[];
   score: number;
+  expected_text?: string;
 }
 
 interface TajweedFeedbackProps {
@@ -21,6 +23,61 @@ interface TajweedFeedbackProps {
   isLoading: boolean;
   className?: string;
 }
+
+// Highlight error letters in the transcription
+const HighlightedTranscription = ({ 
+  text, 
+  errors 
+}: { 
+  text: string; 
+  errors: TajweedError[] 
+}) => {
+  const haaErrors = errors.filter(e => e.is_haa_error);
+  
+  if (haaErrors.length === 0) {
+    return <span>{text}</span>;
+  }
+
+  // Split text and highlight ه characters that should be ح
+  const parts: { text: string; isError: boolean }[] = [];
+  let currentPart = '';
+  let errorCount = 0;
+  const maxErrors = haaErrors.length;
+
+  for (const char of text) {
+    if (char === 'ه' && errorCount < maxErrors) {
+      if (currentPart) {
+        parts.push({ text: currentPart, isError: false });
+        currentPart = '';
+      }
+      parts.push({ text: char, isError: true });
+      errorCount++;
+    } else {
+      currentPart += char;
+    }
+  }
+  if (currentPart) {
+    parts.push({ text: currentPart, isError: false });
+  }
+
+  return (
+    <>
+      {parts.map((part, i) => (
+        part.isError ? (
+          <span 
+            key={i} 
+            className="text-destructive font-bold bg-destructive/10 px-0.5 rounded"
+            title="Should be ح"
+          >
+            {part.text}
+          </span>
+        ) : (
+          <span key={i}>{part.text}</span>
+        )
+      ))}
+    </>
+  );
+};
 
 export const TajweedFeedback = ({ result, isLoading, className }: TajweedFeedbackProps) => {
   if (isLoading) {
@@ -62,10 +119,17 @@ export const TajweedFeedback = ({ result, isLoading, className }: TajweedFeedbac
         <span className="text-lg font-bold text-foreground">{result.score}%</span>
       </div>
 
-      {/* Transcription */}
+      {/* Transcription with highlighted errors */}
       <div className="px-4 py-3 border-b border-border">
         <p className="text-xs text-muted-foreground mb-1">What we heard:</p>
-        <p className="font-arabic text-lg text-foreground" dir="rtl">{result.transcription}</p>
+        <p className="font-arabic text-lg text-foreground" dir="rtl">
+          <HighlightedTranscription text={result.transcription} errors={result.errors} />
+        </p>
+        {haaErrors.length > 0 && (
+          <p className="text-xs text-muted-foreground mt-2">
+            <span className="text-destructive">●</span> Red letters show incorrect pronunciation
+          </p>
+        )}
       </div>
 
       {/* Errors */}
