@@ -3,6 +3,7 @@ import { Mic, Square, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { TajweedResult } from "./TajweedFeedback";
+import { analyzeTajweed } from "@/lib/tajweedApi";
 
 interface RecordButtonProps {
   onRecordingComplete?: (audioBlob: Blob) => void;
@@ -10,48 +11,9 @@ interface RecordButtonProps {
   onRecordingStop?: () => void;
   onAnalysisComplete?: (result: TajweedResult) => void;
   onAnalysisStart?: () => void;
+  expectedText?: string;
   className?: string;
 }
-
-// Mock analysis function - replace with real API call
-const mockAnalyzeTajweed = async (audioBlob: Blob): Promise<TajweedResult> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  
-  // Randomly return either success or error for demo
-  const isCorrect = Math.random() > 0.5;
-  
-  if (isCorrect) {
-    return {
-      transcription: "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ",
-      phonemes: "b i s m i l l aː h i r r a ħ m aː n i r r a ħ iː m",
-      errors: [],
-      score: 100
-    };
-  } else {
-    return {
-      transcription: "بِسۡمِ ٱللَّهِ ٱلرَّهمَٰنِ ٱلرَّهيمِ",
-      phonemes: "b i s m i l l aː h i r r a h m aː n i r r a h iː m",
-      errors: [
-        {
-          position: 12,
-          expected_phoneme: "ħ",
-          got_phoneme: "h",
-          is_haa_error: true,
-          description: "Said ه (h) instead of ح (ħ) in الرَّحۡمَٰنِ"
-        },
-        {
-          position: 18,
-          expected_phoneme: "ħ",
-          got_phoneme: "h",
-          is_haa_error: true,
-          description: "Said ه (h) instead of ح (ħ) in الرَّحِيمِ"
-        }
-      ],
-      score: 65
-    };
-  }
-};
 
 export const RecordButton = ({
   onRecordingComplete,
@@ -59,6 +21,7 @@ export const RecordButton = ({
   onRecordingStop,
   onAnalysisComplete,
   onAnalysisStart,
+  expectedText = "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ",
   className,
 }: RecordButtonProps) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -98,18 +61,23 @@ export const RecordButton = ({
         onAnalysisStart?.();
         
         try {
-          // Call analysis (mock for now, replace with real API)
-          const result = await mockAnalyzeTajweed(audioBlob);
+          // Call real Tajweed API
+          const result = await analyzeTajweed(audioBlob, { expectedText });
           onAnalysisComplete?.(result);
           
           if (result.errors.length === 0) {
             toast.success("Perfect recitation! 🎉");
           } else {
-            toast.error(`${result.errors.length} pronunciation issue(s) found`);
+            const haaErrors = result.errors.filter(e => e.is_haa_error).length;
+            if (haaErrors > 0) {
+              toast.error(`${haaErrors} ح/ه pronunciation error(s) detected`);
+            } else {
+              toast.error(`${result.errors.length} pronunciation issue(s) found`);
+            }
           }
         } catch (error) {
           console.error("Analysis error:", error);
-          toast.error("Failed to analyze recording. Please try again.");
+          toast.error("Failed to analyze recording. Is your API running?");
         } finally {
           setIsProcessing(false);
         }
