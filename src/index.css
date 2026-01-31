@@ -1,0 +1,275 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tajweed AI Design System - Islamic Aesthetic */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    /* Islamic color palette - warm and spiritual */
+    --background: 30 25% 97%;
+    --foreground: 30 15% 15%;
+
+    --card: 30 20% 99%;
+    --card-foreground: 30 15% 15%;
+
+    --popover: 30 20% 99%;
+    --popover-foreground: 30 15% 15%;
+
+    /* Gold - primary accent for Islamic elegance */
+    --primary: 38 75% 45%;
+    --primary-foreground: 30 25% 98%;
+
+    /* Emerald green - Islamic spirituality */
+    --secondary: 158 55% 35%;
+    --secondary-foreground: 30 25% 98%;
+
+    /* Muted warm tones */
+    --muted: 30 20% 92%;
+    --muted-foreground: 30 10% 45%;
+
+    /* Accent - deep burgundy */
+    --accent: 350 45% 35%;
+    --accent-foreground: 30 25% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 30 25% 88%;
+    --input: 30 25% 88%;
+    --ring: 38 75% 45%;
+
+    --radius: 0.75rem;
+
+    /* Custom Tajweed tokens */
+    --gold: 38 75% 45%;
+    --gold-light: 38 75% 55%;
+    --gold-dark: 38 75% 35%;
+    --emerald: 158 55% 35%;
+    --emerald-light: 158 55% 45%;
+    --midnight: 220 35% 15%;
+    --cream: 30 25% 97%;
+    --parchment: 35 30% 93%;
+    
+    /* Recording button states */
+    --record-idle: 350 70% 50%;
+    --record-active: 350 85% 55%;
+    --record-glow: 350 70% 50%;
+
+    /* Gradients as CSS custom properties */
+    --gradient-gold: linear-gradient(135deg, hsl(38 75% 50%), hsl(28 80% 40%));
+    --gradient-islamic: linear-gradient(180deg, hsl(30 25% 97%), hsl(35 30% 93%));
+    --gradient-midnight: linear-gradient(135deg, hsl(220 35% 12%), hsl(220 40% 20%));
+    
+    /* Shadows */
+    --shadow-gold: 0 4px 20px -4px hsl(38 75% 45% / 0.35);
+    --shadow-soft: 0 4px 20px -4px hsl(30 15% 15% / 0.1);
+    --shadow-record: 0 0 40px 8px hsl(350 70% 50% / 0.4);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 220 35% 8%;
+    --foreground: 30 20% 95%;
+
+    --card: 220 35% 12%;
+    --card-foreground: 30 20% 95%;
+
+    --popover: 220 35% 12%;
+    --popover-foreground: 30 20% 95%;
+
+    --primary: 38 75% 55%;
+    --primary-foreground: 220 35% 10%;
+
+    --secondary: 158 50% 45%;
+    --secondary-foreground: 220 35% 10%;
+
+    --muted: 220 30% 18%;
+    --muted-foreground: 30 15% 60%;
+
+    --accent: 350 50% 45%;
+    --accent-foreground: 30 25% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 30% 20%;
+    --input: 220 30% 20%;
+    --ring: 38 75% 55%;
+    
+    --gold: 38 75% 55%;
+    --gold-light: 38 75% 65%;
+    --gold-dark: 38 75% 45%;
+    --cream: 220 35% 8%;
+    --parchment: 220 30% 12%;
+    
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  /* Arabic text styling */
+  .arabic-text {
+    font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+    direction: rtl;
+    line-height: 2.2;
+  }
+
+  .amiri-text {
+    font-family: 'Amiri', serif;
+  }
+}
+
+@layer components {
+  /* Islamic geometric pattern overlay */
+  .islamic-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a962' fill-opacity='0.06'%3E%3Cpath d='M30 0L60 30L30 60L0 30z M30 10L50 30L30 50L10 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Record button pulse animation */
+  .record-pulse {
+    animation: recordPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes recordPulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 hsl(350 70% 50% / 0.5);
+    }
+    50% {
+      box-shadow: 0 0 0 20px hsl(350 70% 50% / 0);
+    }
+  }
+
+  /* Gentle float animation for UI elements */
+  .gentle-float {
+    animation: gentleFloat 3s ease-in-out infinite;
+  }
+
+  @keyframes gentleFloat {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  /* Fade in animation */
+  .fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Verse highlight animation */
+  .verse-glow {
+    animation: verseGlow 2s ease-in-out infinite;
+  }
+
+  @keyframes verseGlow {
+    0%, 100% {
+      text-shadow: 0 0 10px hsl(38 75% 45% / 0.3);
+    }
+    50% {
+      text-shadow: 0 0 20px hsl(38 75% 45% / 0.5);
+    }
+  }
+
+  /* Wave animation for recording */
+  .wave-animation {
+    animation: wave 0.6s ease-in-out infinite alternate;
+  }
+
+  @keyframes wave {
+    from {
+      transform: scaleY(0.5);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+}
+
+@layer utilities {
+  .text-gold {
+    color: hsl(var(--gold));
+  }
+
+  .bg-gold {
+    background-color: hsl(var(--gold));
+  }
+
+  .text-emerald-islamic {
+    color: hsl(var(--emerald));
+  }
+
+  .bg-emerald-islamic {
+    background-color: hsl(var(--emerald));
+  }
+
+  .bg-parchment {
+    background-color: hsl(var(--parchment));
+  }
+
+  .bg-midnight {
+    background-color: hsl(var(--midnight));
+  }
+
+  .bg-gradient-islamic {
+    background: var(--gradient-islamic);
+  }
+
+  .bg-gradient-gold {
+    background: var(--gradient-gold);
+  }
+
+  .bg-gradient-midnight {
+    background: var(--gradient-midnight);
+  }
+
+  .shadow-gold {
+    box-shadow: var(--shadow-gold);
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-record {
+    box-shadow: var(--shadow-record);
+  }
+}
