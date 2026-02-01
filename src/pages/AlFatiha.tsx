@@ -4,6 +4,25 @@ import { useNavigate } from "react-router-dom";
 import { alFatiha } from "@/data/alFatiha";
 import { RecordButton } from "@/components/RecordButton";
 import { TajweedFeedback, TajweedResult } from "@/components/TajweedFeedback";
+const backendUrl = import.meta.env.VITE_TAJWEED_API_URL;
+
+const handleRecordingComplete = async (audioBlob: Blob) => {
+  const formData = new FormData(); // ✅ création ici
+  formData.append("file", audioBlob, "recitation.wav");
+
+  const backendUrl = import.meta.env.VITE_TAJWEED_API_URL;
+
+  const res = await fetch(`${backendUrl}/analyze`, {
+    method: "POST",
+    body: formData,
+  });
+
+
+  const data = await res.json();
+  console.log(data);
+};
+
+
 
 const AlFatihaPage = () => {
   const navigate = useNavigate();
@@ -36,14 +55,14 @@ const AlFatihaPage = () => {
           >
             <ArrowLeft className="w-5 h-5 text-foreground" />
           </button>
-          
+
           <h1 className="font-arabic text-2xl font-semibold text-foreground">
             {alFatiha.nameArabic}
           </h1>
-          
+
           <div className="w-9" />
         </div>
-        
+
         {/* Juz/Hizb and Page info */}
         <div className="flex items-center justify-between px-4 pb-2 text-xs text-muted-foreground">
           <span>Juz 1, Hizb 1</span>
@@ -59,7 +78,7 @@ const AlFatihaPage = () => {
             {/* Decorative border */}
             <div className="absolute inset-2 border-2 border-gold/30 rounded pointer-events-none" />
             <div className="absolute inset-3 border border-gold/20 rounded pointer-events-none" />
-            
+
             {/* Corner ornaments */}
             <div className="absolute top-4 left-4 w-6 h-6 border-l-2 border-t-2 border-gold/40 rounded-tl" />
             <div className="absolute top-4 right-4 w-6 h-6 border-r-2 border-t-2 border-gold/40 rounded-tr" />
@@ -79,7 +98,7 @@ const AlFatihaPage = () => {
 
             {/* Bismillah */}
             <div className="text-center pb-4">
-              <p 
+              <p
                 className="font-arabic text-xl text-[hsl(38,60%,30%)] font-semibold"
                 dir="rtl"
               >
@@ -89,7 +108,7 @@ const AlFatihaPage = () => {
 
             {/* Verses */}
             <div className="px-6 pb-8">
-              <div 
+              <div
                 className="font-arabic text-[22px] leading-[2.8] text-[hsl(25,30%,20%)] text-justify"
                 dir="rtl"
                 lang="ar"
@@ -141,10 +160,10 @@ const AlFatihaPage = () => {
             <TajweedFeedback result={analysisResult} isLoading={isAnalyzing} />
           </div>
         )}
-        
+
         {/* Record Button */}
         <div className="flex justify-center py-2">
-          <RecordButton 
+          <RecordButton
             onRecordingComplete={handleRecordingComplete}
             onAnalysisStart={handleAnalysisStart}
             onAnalysisComplete={handleAnalysisComplete}

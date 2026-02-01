@@ -25,7 +25,7 @@ import numpy as np
 import librosa
 import torch
 from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware  
 from pydantic import BaseModel
 from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
 from phonemizer import phonemize
